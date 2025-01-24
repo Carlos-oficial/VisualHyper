@@ -89,14 +89,29 @@ while running:
                 print(proj_matrix(pos[0],pos[1]))
     #clear the screen
     screen.fill(BLACK)
-    for point,label in zip(X.values,y.values):
-        point = point.tolist() + [1]
+    
+    def pipeline(point):
         point = matmul(proj_matrix(pos[0],pos[1]),point)
         point = matmul(scale_matrix(wheel_pos),point)
         point = matmul(center_0_matrix,point)
         point = normalize(point)
-        pygame.draw.circle(screen,random_colors[label],(point[0],point[1]),5)
+        return point
     
+    for point,label in zip(X.values,y.values):
+        point = point.tolist() + [1]
+        point = pipeline(point)
+        pygame.draw.circle(screen,random_colors[label],(point[0],point[1]),5)
+
+
+    origin = pipeline([0,0,0,0,1])
+    x = pipeline([10000,0,0,0,1])
+    y_ = pipeline([0,10000,0,0,1])
+    z = pipeline([0,0,10000,0,1])
+    w = pipeline([0,0,0,10000,1])
+    pygame.draw.line(screen,'white',origin,x)
+    pygame.draw.line(screen,'white',origin,y_)
+    pygame.draw.line(screen,'white',origin,z)
+    pygame.draw.line(screen,'white',origin,w)
     # pygame.draw.circle(screen,"blue",start_pos,5)
     # pygame.draw.circle(screen,"yellow",(pos[0]+350,pos[1]+250),5)
 
